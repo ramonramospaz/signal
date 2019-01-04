@@ -1,0 +1,8 @@
+// IDL
+module servidor{
+	interface monitor{
+		string agregar(in string valor);
+		string borrar(in string valor);
+		string mostrar();
+	};
+};

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title></title>
+<meta name="generator" content="Bluefish 2.2.3" >
+<meta name="author" content="ramon" >
+<meta name="date" content="2012-12-09T22:58:35-0430" >
+<meta name="copyright" content="">
+<meta name="keywords" content="Computacion Aplicada">
+<meta name="description" content="Tarea de Computacion aplicada">
+<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="expires" content="0">
+<script type="text/javascript" >
+
+	function espacios(texto){
+		return /\s/.test(texto);	
+	}
+
+	function borrar_tabla(){
+		var tabla=document.getElementById("tabla");
+		for(var i=tabla.rows.length;i>1;i--){
+			tabla.deleteRow(i-1);
+		}
+	}
+
+	function llenar_tabla(objeto){
+		borrar_tabla();
+		for(var i=0;i<objeto.length;i++){
+					if(objeto[i].variable!=""){
+					var tabla=document.getElementById("tabla").insertRow(i+1);
+					var x=tabla.insertCell(0);
+					var y=tabla.insertCell(1);
+					var z=tabla.insertCell(2);
+					x.innerHTML=objeto[i].variable;
+					y.innerHTML=objeto[i].valor;
+					z.innerHTML="<button name='borrar' type='button' onclick=eliminar_elemento('"+objeto[i].variable+"')>Borrar</button>";
+					}		
+		}
+	}
+
+	function agregar_elemento(){
+		xmlhttp=new XMLHttpRequest(); 
+		var texto=document.getElementById("variable").value;
+		if(espacios(texto)==false){
+			xmlhttp.onreadystatechange=function(){
+				if(xmlhttp.readyState==4 && xmlhttp.status==200){
+					var obj=eval(xmlhttp.responseText);
+					llenar_tabla(obj);
+				}
+			}
+			xmlhttp.open("GET","phpajax.php?modo=a&variable="+texto,true);
+			xmlhttp.send();
+		}
+		
+	}
+	
+	function eliminar_elemento(texto){
+		xmlhttp=new XMLHttpRequest(); 
+		xmlhttp.onreadystatechange=function(){
+			if(xmlhttp.readyState==4 && xmlhttp.status==200){
+				var obj=eval(xmlhttp.responseText);
+				llenar_tabla(obj);
+			}
+		}
+		xmlhttp.open("GET","phpajax.php?modo=b&variable="+texto,true);
+		xmlhttp.send();
+	}
+	
+	function mostrar_elemento(){
+		xmlhttp=new XMLHttpRequest(); 
+		xmlhttp.onreadystatechange=function(){
+			if(xmlhttp.readyState==4 && xmlhttp.status==200){
+				var obj=eval(xmlhttp.responseText);
+				llenar_tabla(obj);
+			}
+		}
+		xmlhttp.open("GET","phpajax.php?modo=m",true);
+		xmlhttp.send();
+	}
+	
+
+	
+	
+	
+</script>
+</head>
+<body onload="window.setInterval(function(){mostrar_elemento();},1000)">
+<table id="var">
+<tr>
+<td><b>Nombre de la variable</b></td>
+<td><input type="text" id="variable"></td>
+<td><button name="Agregar" type="button" onclick="agregar_elemento()">Agregar</button></td>
+</tr>
+</table>
+<table border="1" id="tabla">
+<tr>
+<td bgcolor="green"><b style="color:white">Nombre de variable</b></td>
+<td bgcolor="green"><b style="color:white">Valor</b></td>
+<td bgcolor="green"></td>
+</tr>
+<tr>
+</table>
+</body>
+</html>
+
